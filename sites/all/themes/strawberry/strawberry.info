@@ -1,0 +1,22 @@
+name = Strawberry
+description = Strawberry theme
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-04-03
+project = "NPRO"
+
+regions[admin]         = Admin
+regions[content]       = Content
+regions[footer]        = Footer
+
+regions[page_top]       = Page top
+regions[page_bottom]    = Page bottom
+
+; stylesheets[all][] = css/admin.css
+stylesheets[all][] = css/normalize.min.css
+stylesheets[all][] = css/main.css
+stylesheets[all][] = css/pushy.css
+stylesheets[all][] = css/idangerous.swiper.css
+
+scripts[] = js/main.js
+scripts[] = js/vendor/plugins.js

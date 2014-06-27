@@ -1,0 +1,5 @@
+name = Content Types
+description = Content Types and Terms for Strawberry web site
+core = 7.x
+package = Custom
+php = 5.2.4

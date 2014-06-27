@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Code for the Content Types.
+ */
+
+ function custom_content_types_menu_alter(&$items) {
+   //$items['taxonomy/term/%taxonomy_term']['page callback'] = 'redworks_content_types_term_page';
+   //$items['taxonomy/term/%']['access arguments'] = array('access content');
+}
+
+function custom_content_types_theme($existing, $type, $theme, $path) {
+    return array(
+		'page_sitemap' => array(
+            'variables' => array('mainMenu' => array(), 'footerMenu' => array()),
+            'template' => 'page_sitemap',
+            'path' => $path . '/tpl',
+        )
+	);
+}
+
+function  custom_content_types_form_alter(&$form, &$form_state, $form_id) {
+
+
+  if($form_id ==  'webform_client_form_2') {
+    $nid = $form['#node']->nid;
+    $form['actions']['submit']['#ajax'] = array(
+      'callback' => 'sandbox_webform_js_submit',
+      'wrapper' => 'footer-newsletter',
+      'method' => 'replace',
+    );
+  }
+}
+
+function sandbox_webform_js_submit($form, $form_state) {
+  // define the $sid variable (submission id from webform)
+  $sid = $form_state['values']['details']['sid'];
+  watchdog('form', $sid);
+  // if we have a sid then we know the form was properly submitted, otherwise, we'll just return the existing $form array
+  if ($sid) {
+
+    // first we have to load up the webform node object
+    $node = node_load($form_state['values']['details']['nid']);
+    // create an array up with the confirmation message, retreived from the webform node
+    $confirmation = array(
+      '#type' => 'markup',
+      '#markup' => '<div class="form-msg">'.check_markup($node->webform['confirmation'], $node->webform['confirmation_format'], '', TRUE).'</div>',
+    );
+    // return the confirmation message
+    return $confirmation;
+  }
+  else {
+    // return the form
+    return $form;
+  }
+}
+
+
+function custom_content_types_menu() {
+	 $items = array();
+	
+	// Sitemap
+    $items['sitemap'] = array(
+        'page callback' => 'custom_content_types_sitemap',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+    );
+
+	// load node by ajax
+	$items['node/get/ajax/%'] = array(
+		'page callback' => 'custom_content_types_ajax_get_ajax', // Render HTML
+		'page arguments' => array(3),
+		'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		'delivery callback' => 'custom_content_types_ajax_callback',  // Magic goes here
+	  );
+	  return $items;
+
+    return $items;
+}
+
+function custom_content_types_ajax_get_ajax($nid) {
+  // Just load a node and return teaser, you can return whatever you want including forms
+  $node = node_load($nid);
+  return node_view($node, 'full');
+}
+
+function custom_content_types_ajax_callback($page_callback_result) {
+  // Only render content
+  $content = drupal_render($page_callback_result);
+  // Add CSS ans JS files, add some markup
+    $html = drupal_get_js() . '<div class="jquery-ajax-load content">' . $content . '</div>';
+    print $html;
+  // Perform end-of-request tasks.
+  drupal_page_footer();
+}
+
+function custom_content_types_sitemap() {
+
+    //$variables[] = array("data" => l($rubrique->name, drupal_get_path_alias("taxonomy/term/" . $rubrique->tid),array('attributes' => array('class' => $class))));
+    $variables = array(
+        'mainMenu' => menu_navigation_links('main-menu'),
+        'footerMenu' => menu_navigation_links('menu-footer')
+    );
+
+    return theme('page_sitemap', $variables);
+}
+
+
+/*
+	- hook webform_submission_insert
+	need to save newsletter weboform if agree newsletter checkbox is checked in contact us webform
+*/
+function custom_content_types_webform_submission_insert($node, $submission) {
+	//
+	if($node->nid == 7) { // contact us form 
+		watchdog('test', print_r($submission, true) ); 
+		if(isset($submission->data[5]['value'][0]) && $submission->data[5]['value'][0]) {	//add to newsletter
+			  $email = $submission->data[3]['value'][0];
+
+			  $node = node_load(2);
+			  global $user;
+			  $data = array(
+				1 => array('value' => array($email)),				
+			  );
+			  $submission = (object) array(
+				'nid' => 2,
+				'uid' => $user->uid,
+				'submitted' => REQUEST_TIME,
+				'remote_addr' => ip_address(),
+				'is_draft' => FALSE,
+				'data' => $data,
+			  );
+			  module_load_include('inc', 'webform', 'includes/webform.submissions');
+			  webform_submission_insert($node, $submission);
+			  //webform_submission_send_mail($node, $submission);
+		}
+	}
+}

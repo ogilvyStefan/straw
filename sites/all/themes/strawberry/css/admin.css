@@ -1,0 +1,77 @@
+/* line 1, ../sass/admin.scss */
+#admin {
+  overflow: hidden;
+  padding: 10px 20px 0 20px;
+  position: relative;
+  background-color: #e0e0d8;
+}
+/* line 7, ../sass/admin.scss */
+#admin a {
+  color: #0074BD;
+}
+/* line 11, ../sass/admin.scss */
+#admin .tabs {
+  background-color: transparent;
+  margin: 0 0;
+  padding: 0;
+}
+
+
+/* line 32, ../sass/admin.scss */
+#admin ul.primary {
+  float: right;
+  border-bottom: none;
+  text-transform: uppercase;
+  font-size: 11px;
+  height: 2.60em;
+  margin: 0;
+  padding-top: 0;
+}
+/* line 41, ../sass/admin.scss */
+#admin ul.primary li {
+  float: left;
+  list-style: none;
+  margin: 0 2px;
+}
+/* line 51, ../sass/admin.scss */
+#admin ul.primary li a:link,
+#admin ul.primary li a.active,
+#admin ul.primary li a:active,
+#admin ul.primary li a:visited,
+#admin ul.primary li a:hover,
+#admin ul.primary li.active a {
+   text-decoration:none;
+  display: block;
+  float: left;
+  /* LTR */
+  height: 2.60em;
+  line-height: 2.60em;
+  padding: 0 18px 8px;
+  background-color: #a6a7a2;
+  color: #000;
+  font-weight: bold;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #a6a7a2;
+  -moz-border-radius: 8px 8px 0 0;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-radius: 8px 8px 0 0;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+}
+/* line 72, ../sass/admin.scss */
+#admin ul.primary li.active a,
+#admin ul.primary li.active a.active,
+#admin ul.primary li.active a:active,
+#admin ul.primary li.active a:visited {
+  background-color: #fff;
+  border-color: #c9cac4;
+}
+/* line 76, ../sass/admin.scss */
+#admin ul.primary li a:hover {
+  color: #fff;
+}
+/* line 79, ../sass/admin.scss */
+#admin ul.primary li.active a:hover {
+  color: #000;
+}
